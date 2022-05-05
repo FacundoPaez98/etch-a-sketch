@@ -4,9 +4,6 @@ body {
     align-items: center;
     justify-content: center;
     background-color: #53565c;
-    margin: 0;
-    padding: 0;
-    border: 0;
 }
 
 h1 {
@@ -39,6 +36,6 @@ button {
 }
 
 .hover {
-    background-color: black;
     transition: 0.5s;
+    filter: brightness(1);
 }

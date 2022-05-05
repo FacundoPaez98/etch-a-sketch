@@ -1,6 +1,7 @@
 const container = document.querySelector('.container');
 const blackButton = document.getElementById('black-button');
 const rainbowButton = document.getElementById('rainbow-button');
+const grayScaleButton = document.getElementById('gray-scale-button');
 const sizeButton = document.getElementById('size-button');
 const clearButton = document.getElementById('clear-button');
 
@@ -15,7 +16,8 @@ function createGrid(gridSize) {
 
     for (let i = 0; i < totalBoxes; i++) {
         let box = document.createElement('div');
-        box.addEventListener('mouseover', () => box.className = 'hover');
+        box.className = 'hover';
+        box.onmouseover = () => box.style.backgroundColor = 'black';
         container.appendChild(box);
     }
 }
@@ -43,15 +45,34 @@ function changeHoverToBlack() {
     const boxes = container.childNodes;
 
     boxes.forEach(box => {
-        box.addEventListener('mouseover', () => box.style.backgroundColor = 'black');
+        box.onmouseover = () => box.style.backgroundColor = 'black';
     });
 }
 
 function changeHoverToRandom() {
     const boxes = container.childNodes;
+    
+    boxes.forEach(box => {
+        box.onmouseover = () => {
+            box.style.filter = 'brightness(1)';
+            box.style.backgroundColor = randomRGB()
+        }
+    });
+}
+
+function changeHoverToGrayScale() {
+    const boxes = container.childNodes;
 
     boxes.forEach(box => {
-        box.addEventListener('mouseover', () => box.style.backgroundColor = randomRGB());
+        box.onmouseover = () => {
+            let value = getComputedStyle(box).filter.match(/[+-]?\d+(\.\d+)?/g);
+            let backgroundColor = getComputedStyle(box).backgroundColor;
+            
+            if(backgroundColor !== 'rgb(255, 255, 255)') box.style.backgroundColor = 'rgb(255, 255, 255)';
+            value = value.join('');
+            if(value !== 0) box.style.filter = `brightness(${value - 0.1})`;
+            if(value < 0.1) box.style.filter = `brightness(0)`;
+        }
     });
 }
 
@@ -61,7 +82,11 @@ blackButton.addEventListener('click', function () {
 
 rainbowButton.addEventListener('click', function() {
     changeHoverToRandom();
-})
+});
+
+grayScaleButton.addEventListener('click', function() {
+    changeHoverToGrayScale();
+});
 
 sizeButton.addEventListener('click', function () {
     const newSize = prompt('Choose the size of the new grid (between 1 and 100)');
